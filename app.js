@@ -13,9 +13,9 @@ export default (express, bodyParser, puppeteer) => {
         .use((r, res, next) => { r.res.set(CORS); next(); })
         .use(bodyParser.json())
         .use(bodyParser.urlencoded({ extended: true }))
-
+    
         .get('/login/', (req, res) => {
-            res.send(author)
+            res.send('kokkareva97')
         })
 
         .get('/test/', async (req, res) => {
@@ -28,7 +28,7 @@ export default (express, bodyParser, puppeteer) => {
             await page.click('#bt');
             const got = await page.$eval('#inp', el => el.value);
             res.set('Content-Type', 'text-plain;charset=utf-8');
-            res.end(got);
+            res.send(got);
         })
 
         .all('/*', (req, res) => res.send('kokkareva97'));
