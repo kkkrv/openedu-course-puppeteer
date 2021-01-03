@@ -18,19 +18,17 @@ export default (express, bodyParser, puppeteer) => {
             res.send('kokkareva97')
         })
 
-        .get('/test/', (req, res) => {
-            const { URL } = req.query;
-            async () => {
-                const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
-                const page = await browser.newPage();
-                await page.goto(URL);
-                await page.waitForSelector('#inp')
-                await page.waitForSelector('#bt')
-                await page.click('#bt');
-                const got = await page.$eval('#inp', el => el.value);
-                res.set('Content-Type', 'text-plain;charset=utf-8');
-                res.send(got);
-            }
+       .get('/test/', async (req, res) => {
+            const URL = req.query.URL;
+            const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
+            const page = await browser.newPage();
+            await page.goto(URL);
+            await page.waitForSelector('#inp')
+            await page.waitForSelector('#bt')
+            await page.click('#bt');
+            const got = await page.$eval('#inp', el => el.value);
+            res.setHeader('Content-Type', 'text-plain');
+            res.end(got);
         })
 
         .all('/*', (req, res) => res.send('kokkareva97'));
