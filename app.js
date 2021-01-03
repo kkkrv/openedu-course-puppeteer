@@ -14,20 +14,29 @@ export default (express, bodyParser, puppeteer) => {
         .use(bodyParser.json())
         .use(bodyParser.urlencoded({ extended: true }))
 
-        .get('/login/', (req, res) => res.send('kokkareva97'))
+        .get('/login/', (req, res) => {
+            res.send(author)
+        })
 
         .get('/test/', async (req, res) => {
-            const URL = req.query.URL;
-            const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
-            const page = await browser.newPage();
-            await page.goto(URL);
-            await page.waitForSelector('#inp')
-            await page.waitForSelector('#bt')
-            await page.click('#bt');
-            const got = await page.$eval('#inp', el => el.value);
-            res.set('Content-Type', 'text-plain;charset=utf-8');
-            res.end(got);
+            const { URL } = req.query
+            const browser = await puppeteer.launch({
+                headless: true,
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                ],
+            })
+            const page = await browser.newPage()
+            await page.goto(URL)
+            await page.click('#bt')
+            const value = await page.evaluate(async () => {
+                const input = document.getElementById('inp')
+                return input.value
+            })
+            res.send(value)
         })
+
         .all('/*', (req, res) => res.send('kokkareva97'));
 
 
