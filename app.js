@@ -23,8 +23,8 @@ export default (express, bodyParser, puppeteer) => {
             const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
             const page = await browser.newPage();
             await page.goto(URL);
-            await page.waitForSelector('#inp')
-            await page.waitForSelector('#bt')
+            await page.waitForSelector('#inp');
+            await page.waitForSelector('#bt');
             await page.click('#bt');
             const got = await page.$eval('#inp', el => el.value);
             res.setHeader('Content-Type', 'text-plain');
